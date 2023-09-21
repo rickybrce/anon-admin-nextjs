@@ -46,3 +46,14 @@ export function getAvailableCharacters() {
     auth: true,
   });
 }
+
+export function grantBalance (
+  address: any,
+  amount: any,
+): any {
+  const api = new Api();
+  return api.request({
+    endpoint: "users/grant_balance?address="+address+"&amount="+amount,
+    auth: true,
+  });
+}

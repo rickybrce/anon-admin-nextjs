@@ -13,6 +13,8 @@ import CreateCoin from "./components/CreateCoin";
 import UpdateCoin from "./components/UpdateCoin";
 import PopupPlaceBet from "../components/PopupPlaceBet";
 import { getHotGame, setHotGame } from "../api/stats";
+import { grantBalance } from "../api/user";
+import Input from "./components/Input";
 
 export default function BurnPage() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -35,6 +37,15 @@ export default function BurnPage() {
   const [displayHotGame, setDisplayHotGame] = useState<any>(null);
   const [activeGames, setActiveGames] = useState<any>(null);
   const [hotGameSet, setHotGameSet] = useState(false);
+  const [grantSuccess, setGrantSuccess] = useState(false);
+  const [selectedAmmount, setSelectedAmmount] = useState<any>(null);
+  const [userAddress, setUserAddress] = useState<any>(null);
+  const [displayGrantBalance, setDisplayGrantBalance] = useState<any>(null);
+  const [displayGrantBalanceSet, setDisplayGrantBalanceSet] =
+    useState<any>(null);
+  const [errorAmount, setErrorAmount] = useState<string | undefined>(undefined);
+  const [errorGrant, setErrorGrant] = useState<string | undefined>(undefined);
+  //const [users, setUsers] = useState<any>(null);
 
   //Check if logged in
   useEffect(() => {
@@ -141,19 +152,68 @@ export default function BurnPage() {
   //Handle hot game
   const handleSetHotGame = (id: any) => {
     const hot_game_id = id;
-   setHotGame(hot_game_id)
-   .then(async (response: any) => {
-    console.log(response);
-    setHotGameSet(true);
-    (async () => {
-      const gethotgame = await getHotGame();
-      //Get single game data
-      const game = await getGame(gethotgame);
-      setHotGameS(game);
-    })();
-    console.log("Hot game set");
-  })
+    setHotGame(hot_game_id).then(async (response: any) => {
+      console.log(response);
+      setHotGameSet(true);
+      (async () => {
+        const gethotgame = await getHotGame();
+        //Get single game data
+        const game = await getGame(gethotgame);
+        setHotGameS(game);
+      })();
+      console.log("Hot game set");
+    });
   };
+
+  //Grant Balance
+  const handleGrantBalance = (useraddress: any) => {
+    const address = useraddress;
+    const amount = selectedAmmount;
+
+    if (amount !== null && amount !== "") {
+      grantBalance(address, amount)
+        .then(async (response: any) => {
+          console.log(response);
+          console.log("Balance granted");
+          setGrantSuccess(true);
+          const timer = setTimeout(() => {
+            setGrantSuccess(false);
+          }, 2000);
+          return () => clearTimeout(timer);
+        })
+        .catch((error: any) => {
+          console.log(error);
+          setErrorGrant(error.message);
+        });
+    } else {
+      setErrorAmount("Field is required");
+    }
+  };
+
+
+  const users = [
+    {
+      id: "123456",
+    },
+    {
+      id: "32432werwer234",
+    },
+  ];
+
+  //Handle name
+  const handleamountChange = (e: any) => {
+    if (e.target.value !== "") {
+      setErrorAmount(undefined);
+      setErrorGrant(undefined);
+      setGrantSuccess(false);
+    } else {
+      setErrorAmount("Field is required");
+      e.preventDefault();
+    }
+    setSelectedAmmount(e.target.value);
+  };
+
+  console.log(selectedAmmount);
 
   return (
     <main className="">
@@ -170,6 +230,76 @@ export default function BurnPage() {
               </ButtonMenu>
             </div>
           </div>
+
+          <div className="border-t mt-6 py-6 border-blue-500">
+            <div className="flex justify-between items-center flex-wrap mb-10">
+              <div className="text-xl">Grant user balance</div>
+              <div>{hotGameS?.name}</div>
+            </div>
+            <ButtonPlay
+              onClick={() => {
+                setDisplayGrantBalance(!displayGrantBalance),
+                  setDisplayGrantBalanceSet(false),
+                  setGrantSuccess(false),
+                  setErrorGrant(undefined);
+              }}
+              className="mr-2"
+            >
+              Grant user balance
+            </ButtonPlay>
+            {displayGrantBalance && (
+              <div>
+                <div>
+                  {grantSuccess && (
+                    <div className="text-green-200 mt-4 text-center text-lg">
+                      Grant balance set !!!
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {errorGrant && (
+                    <div className="text-red-200 mt-4 text-center text-lg">
+                      {errorGrant}
+                    </div>
+                  )}
+                </div>
+                <div className="text-left">
+                  <Input
+                    type="text"
+                    onChange={handleamountChange}
+                    value={selectedAmmount}
+                    error={errorAmount}
+                    label="Amount"
+                    placeholder="Amount"
+                    required={true}
+                    name="amount"
+                  />
+                </div>
+                {users &&
+                  users.map((user: any, index: number) => (
+                    <div
+                      key={index}
+                      className="mt-4 border-b pb-4 border-cyan-500"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="text-left">{user.id}</div>
+                        <div>
+                          <ButtonPlay
+                            onClick={() => {
+                              handleGrantBalance(user.id);
+                            }}
+                            className="mr-2"
+                          >
+                            Set
+                          </ButtonPlay>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+
           <div className="border-t mt-6 py-6 border-blue-500">
             <div className="flex justify-between items-center flex-wrap mb-10">
               <div className="text-xl">Hot Game</div>
@@ -187,7 +317,9 @@ export default function BurnPage() {
               <div>
                 <div>
                   {hotGameSet && (
-                    <div className="text-green-200 mt-4 text-center text-lg">Hot game set !!!</div>
+                    <div className="text-green-200 mt-4 text-center text-lg">
+                      Hot game set !!!
+                    </div>
                   )}
                 </div>
                 {activeGames &&
