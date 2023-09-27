@@ -38,8 +38,8 @@ export default function BurnPage() {
   const [activeGames, setActiveGames] = useState<any>(null);
   const [hotGameSet, setHotGameSet] = useState(false);
   const [grantSuccess, setGrantSuccess] = useState(false);
-  const [selectedAmmount, setSelectedAmmount] = useState<any>(null);
-  const [userAddress, setUserAddress] = useState<any>(null);
+  const [selectedAmmount, setSelectedAmmount] = useState<any>("");
+  const [userAddress, setUserAddress] = useState<any>("");
   const [displayGrantBalance, setDisplayGrantBalance] = useState<any>(null);
   const [displayGrantBalanceSet, setDisplayGrantBalanceSet] =
     useState<any>(null);
