@@ -14,7 +14,7 @@ const CreateGame = ({ handleCreateGame }: Props) => {
   const utcDate = new Date();
   // Adjust the time zone offset to CET (Central European Time)
   const cetOffset = +120; // CET is UTC+1, so the offset is -60 minutes
-  const currentDate = new Date(utcDate.getTime() + cetOffset * 60000);;
+  const currentDate = new Date(utcDate.getTime() + cetOffset * 60000);
   const error_text = "Field is required";
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [name, setName] = useState("");

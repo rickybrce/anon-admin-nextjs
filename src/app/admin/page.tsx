@@ -45,6 +45,9 @@ export default function BurnPage() {
     useState<any>(null);
   const [errorAmount, setErrorAmount] = useState<string | undefined>(undefined);
   const [errorGrant, setErrorGrant] = useState<string | undefined>(undefined);
+  const [errorUserAddress, setErrorUserAddress] = useState<string | undefined>(
+    undefined
+  );
   //const [users, setUsers] = useState<any>(null);
 
   //Check if logged in
@@ -166,11 +169,16 @@ export default function BurnPage() {
   };
 
   //Grant Balance
-  const handleGrantBalance = (useraddress: any) => {
-    const address = useraddress;
+  const handleGrantBalance = () => {
+    const address = userAddress;
     const amount = selectedAmmount;
 
-    if (amount !== null && amount !== "") {
+    if (
+      amount !== null &&
+      amount !== "" &&
+      address !== null &&
+      address !== ""
+    ) {
       grantBalance(address, amount)
         .then(async (response: any) => {
           console.log(response);
@@ -189,7 +197,6 @@ export default function BurnPage() {
       setErrorAmount("Field is required");
     }
   };
-
 
   const users = [
     {
@@ -211,6 +218,18 @@ export default function BurnPage() {
       e.preventDefault();
     }
     setSelectedAmmount(e.target.value);
+  };
+  //Handle user address
+  const handuserAddressChange = (e: any) => {
+    if (e.target.value !== "") {
+      setErrorUserAddress(undefined);
+      setErrorGrant(undefined);
+      setGrantSuccess(false);
+    } else {
+      setErrorUserAddress("Field is required");
+      e.preventDefault();
+    }
+    setUserAddress(e.target.value);
   };
 
   console.log(selectedAmmount);
@@ -234,7 +253,6 @@ export default function BurnPage() {
           <div className="border-t mt-6 py-6 border-blue-500">
             <div className="flex justify-between items-center flex-wrap mb-10">
               <div className="text-xl">Grant user balance</div>
-              <div>{hotGameS?.name}</div>
             </div>
             <ButtonPlay
               onClick={() => {
@@ -275,27 +293,27 @@ export default function BurnPage() {
                     name="amount"
                   />
                 </div>
-                {users &&
-                  users.map((user: any, index: number) => (
-                    <div
-                      key={index}
-                      className="mt-4 border-b pb-4 border-cyan-500"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-left">{user.id}</div>
-                        <div>
-                          <ButtonPlay
-                            onClick={() => {
-                              handleGrantBalance(user.id);
-                            }}
-                            className="mr-2"
-                          >
-                            Set
-                          </ButtonPlay>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="text-left">
+                  <Input
+                    type="text"
+                    onChange={handuserAddressChange}
+                    value={userAddress}
+                    error={errorUserAddress}
+                    label="User address"
+                    placeholder="User Address"
+                    required={true}
+                    name="userAddress"
+                  />
+                </div>
+
+                <ButtonPlay
+                  onClick={() => {
+                    handleGrantBalance();
+                  }}
+                  className="mr-2 mt-6"
+                >
+                  Set
+                </ButtonPlay>
               </div>
             )}
           </div>
@@ -322,7 +340,7 @@ export default function BurnPage() {
                     </div>
                   )}
                 </div>
-                {activeGames &&
+                {activeGames.length > 0 ?
                   activeGames.map((game: any, index: number) => (
                     <div
                       key={index}
@@ -344,7 +362,7 @@ export default function BurnPage() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )) : <div className="mt-4">No active games</div>}
               </div>
             )}
           </div>
