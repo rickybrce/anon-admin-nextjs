@@ -190,8 +190,8 @@ export default function BurnPage() {
           return () => clearTimeout(timer);
         })
         .catch((error: any) => {
-          console.log(error);
-          setErrorGrant(error.message);
+          console.log(error.response.detail);
+          setErrorGrant(error.response.detail);
         });
     } else {
       setErrorAmount("Field is required");

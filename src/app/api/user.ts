@@ -54,6 +54,7 @@ export function grantBalance (
   const api = new Api();
   return api.request({
     endpoint: "users/grant_balance?address="+address+"&amount="+amount,
+    type: "POST",
     auth: true,
   });
 }
