@@ -15,6 +15,8 @@ const CreateGame = ({ handleCreateGame }: Props) => {
   // Adjust the time zone offset to CET (Central European Time)
   const cetOffset = +120; // CET is UTC+1, so the offset is -60 minutes
   const currentDate = new Date(utcDate.getTime() + cetOffset * 60000);
+  // Set seconds to zero
+  currentDate.setSeconds(0);
   const error_text = "Field is required";
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [name, setName] = useState("");
@@ -323,9 +325,11 @@ const CreateGame = ({ handleCreateGame }: Props) => {
             <div className="absolute right-4 top-12 z-10">
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
-                selected={new Date()}
-                onChange={(date: any) => setOpenDate(new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString())}
+                selected={ new Date(openDate || '')  }
+                onChange={(date: any) => setOpenDate(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
+                onCalendarOpen={() => setOpenDate(openDate)}
                 showTimeSelect
+                //timeFormat="HH:mm"
               />
             </div>
             <Input
@@ -344,7 +348,8 @@ const CreateGame = ({ handleCreateGame }: Props) => {
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
                 selected={new Date()}
-                onChange={(date: any) => setCloseDate(new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString())}
+                onChange={(date: any) => setCloseDate(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
+                onCalendarOpen={() => setCloseDate(closeDate)}
                 showTimeSelect
               />
             </div>
@@ -364,8 +369,9 @@ const CreateGame = ({ handleCreateGame }: Props) => {
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
                 selected={new Date()}
-                onChange={(date: any) => setBetsSoftClose(new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString())}
+                onChange={(date: any) => setBetsSoftClose(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
                 showTimeSelect
+                onCalendarOpen={() => setBetsSoftClose(betsSoftClose)}
               />
             </div>
             <Input
@@ -384,8 +390,9 @@ const CreateGame = ({ handleCreateGame }: Props) => {
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
                 selected={new Date()}
-                onChange={(date: any) => setBetsHardClose(new Date(date.getTime() + 2 * 60 * 60 * 1000).toISOString())}
+                onChange={(date: any) => setBetsHardClose(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
                 showTimeSelect
+                onCalendarOpen={() => setBetsHardClose(betsHardClose)}
               />
             </div>
             <Input
