@@ -347,7 +347,7 @@ const CreateGame = ({ handleCreateGame }: Props) => {
           <div className="absolute right-4 top-12 z-10">
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
-                selected={new Date()}
+                selected={ new Date(closeDate || '')  }
                 onChange={(date: any) => setCloseDate(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
                 onCalendarOpen={() => setCloseDate(closeDate)}
                 showTimeSelect
@@ -368,7 +368,7 @@ const CreateGame = ({ handleCreateGame }: Props) => {
           <div className="absolute right-4 top-12 z-10">
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
-                selected={new Date()}
+                selected={new Date(betsSoftClose || '')  }
                 onChange={(date: any) => setBetsSoftClose(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
                 showTimeSelect
                 onCalendarOpen={() => setBetsSoftClose(betsSoftClose)}
@@ -389,7 +389,7 @@ const CreateGame = ({ handleCreateGame }: Props) => {
           <div className="absolute right-4 top-12 z-10">
               <DatePicker
                 className="w-4  h-4 rounded-full bg-blue-500 text-blue-500 cursor-pointer"
-                selected={new Date()}
+                selected={ new Date(betsHardClose || '')  }
                 onChange={(date: any) => setBetsHardClose(new Date(date.getTime() + 1 * 60 * 60 * 1000).toISOString())}
                 showTimeSelect
                 onCalendarOpen={() => setBetsHardClose(betsHardClose)}
